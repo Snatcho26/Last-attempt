@@ -1,15 +1,25 @@
+import Script from "next/script";
 import "./globals.css";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Snatcho India",
-  description: "Join the waitlist for Snatcho – the next-gen platform 🚀",
-};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 text-gray-900">{children}</body>
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-FDD8CSW2EV"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-FDD8CSW2EV');
+          `}
+        </Script>
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
