@@ -10,7 +10,7 @@ const supabase = createClient(
 
 // Brevo setup
 const brevoClient = SibApiV3Sdk.ApiClient.instance;
-brevoClient.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+brevoClient.authentications["api-key"].apiKey = process.env.BREVO_API_KEY as string;
 const brevoApi = new SibApiV3Sdk.ContactsApi();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -25,14 +25,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: "Missing email" });
     }
 
-    // 1. Save email into Supabase waitlist table
+    // 1. Save to Supabase
     await supabase.from("waitlist").insert([{ email, name }]);
 
-    // 2. Add email into Brevo Waitlist #5 (replace 123 with your listId)
+    // 2. Add to Brevo list
     const contact = {
       email,
       attributes: { FIRSTNAME: name || "" },
-      listIds: [123],
+      listIds: [LIST_ID], // <-- Replace LIST_ID with your actual Brevo listId
     };
     await brevoApi.createContact(contact);
 
